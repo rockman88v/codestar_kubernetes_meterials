@@ -1,0 +1,61 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: taa-deploy
+  namespace: taa
+  labels:
+    app: nginx
+spec:
+  replicas: 5
+  selector:
+    matchLabels:
+      app: taa
+  template:
+    metadata:
+      namespace: taa
+      labels:
+        app: taa
+    spec:
+      containers:
+      - name: taa-php
+        image: vietchita/codestart-phpweb:latest
+        resources:
+          limits:
+            memory: 512Mi
+            cpu: "0.5"
+          requests:
+            memory: 256Mi
+            cpu: "0.2"
+        env:
+        - name: APP_DEBUG
+          valueFrom:
+            configMapKeyRef:
+              name: taa-config
+              key: APP_DEBUG
+        - name: DB_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: taa-config
+              key: DB_HOST
+        - name: DB_USERNAME
+          valueFrom:
+            configMapKeyRef:
+              name: taa-config
+              key: DB_USERNAME
+        - name: DB_PASSWORD
+          valueFrom:
+            configMapKeyRef:
+              name: taa-config
+              key: DB_PASSWORD
+        - name: DB_NAME
+          valueFrom:
+            configMapKeyRef:
+              name: taa-config
+              key: DB_NAME
+        ports:
+        - containerPort: 9000
+      - name: taa-nginx
+        image: vietchita/codestar-nginx:latest
+        ports:
+        - containerPort: 80
+
