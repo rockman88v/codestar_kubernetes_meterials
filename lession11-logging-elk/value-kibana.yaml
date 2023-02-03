@@ -1,0 +1,12 @@
+resources:
+  requests:
+    cpu: "100m"
+    memory: "200Mi"
+  limits:
+    cpu: "400m"
+    memory: "512Gi"
+service:
+  type: NodePort
+  loadBalancerIP: ""
+  port: 5601
+  nodePort: "30093"

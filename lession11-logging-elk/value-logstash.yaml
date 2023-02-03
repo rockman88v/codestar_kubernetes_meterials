@@ -1,0 +1,39 @@
+logstashPipeline:
+ logstash.conf: |
+   input {
+     beats {
+       port => 5044
+     }
+   }
+   output { elasticsearch { hosts => "http://elasticsearch-master:9200" }}
+
+
+resources:
+  requests:
+    cpu: "100m"
+    memory: "100Mi"
+  limits:
+    cpu: "800m"
+    memory: "1000Mi"
+
+volumeClaimTemplate:
+  accessModes: ["ReadWriteOnce"]
+  storageClassName: ebs-sc
+  resources:
+    requests:
+      storage: 1Gi
+persistence:
+  enabled: true
+
+service:
+  type: ClusterIP
+  # loadBalancerIP: ""
+  ports:
+    - name: beats
+      port: 5044
+      protocol: TCP
+      targetPort: 5044
+  #   - name: http
+  #     port: 8080
+  #     protocol: TCP
+  #     targetPort: 8080
