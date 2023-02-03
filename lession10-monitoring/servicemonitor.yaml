@@ -1,0 +1,12 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: codestar-prometheus
+  labels:
+    release: prometheus-release
+spec:
+  selector:
+    matchLabels:
+      app: codestar
+  endpoints:
+    - port: web
